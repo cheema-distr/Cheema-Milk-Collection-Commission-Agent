@@ -88,7 +88,37 @@ app.use(async (req, res, next) => {
   }
 });
 
-// ─── Root Route ───────────────────────────────────────────────────────────────
+// ─── One-time Seed Endpoint ───────────────────────────────────────────────────
+// Admin user create karo agar exist nahi karta
+// Security: secret token required in header
+app.post('/api/seed-admin', async (req, res) => {
+  const secret = req.headers['x-seed-secret'];
+  if (secret !== process.env.SEED_SECRET) {
+    return res.status(403).json({ success: false, message: 'Forbidden' });
+  }
+  try {
+    const User = require('./models/User');
+    const bcrypt = require('bcryptjs');
+    const existing = await User.findOne({ username: 'admin' });
+    if (existing) {
+      return res.json({ success: true, message: 'Admin already exists', username: 'admin' });
+    }
+    const hashedPassword = await bcrypt.hash('admin123', 12);
+    await User.create({
+      fullName: 'System Admin',
+      username: 'admin',
+      password: hashedPassword,
+      phone: '0300000000',
+      role: 'Admin',
+      status: 'Active',
+    });
+    return res.json({ success: true, message: 'Admin created!', username: 'admin', password: 'admin123' });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+
 app.get('/', (req, res) => {
   res.json({
     success: true,
