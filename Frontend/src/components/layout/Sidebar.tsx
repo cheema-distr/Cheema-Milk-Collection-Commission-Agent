@@ -34,7 +34,7 @@ const navItems: NavItem[] = [
   { section: 'Management',  title: 'Route Create',       href: '/admin/routes',            icon: Navigation,    roles: ['Admin'] },
   { section: 'Management',  title: 'Vehicles',           href: '/admin/vehicles',          icon: Truck,         roles: ['Admin'] },
   { section: 'Management',  title: 'User Roles',         href: '/admin/users',             icon: Users,         roles: ['Admin'] },
-  { section: 'Management',  title: 'Advances',           href: '/admin/advances',          icon: DollarSign,    roles: ['Admin'] },
+  { section: 'Management',  title: 'Driver + 3RD Party Transaction', href: '/admin/advances',          icon: DollarSign,    roles: ['Admin'] },
 
   // MilkTester
   { section: 'My Work',     title: 'Route Collection',   href: '/milktester/collections',  icon: Database,      roles: ['MilkTester'] },
@@ -47,7 +47,7 @@ const navItems: NavItem[] = [
   { section: 'Transactions',title: 'Dispatch Milk',      href: '/accountant/dispatch',     icon: Truck,         roles: ['Accountant'] },
   { section: 'Ledger',      title: 'Purchase Ledger',    href: '/accountant/purchase-ledger', icon: ArrowDownLeft, roles: ['Accountant'] },
   { section: 'Ledger',      title: 'Sale Ledger',        href: '/accountant/sale-ledger',  icon: ArrowUpRight,  roles: ['Accountant'] },
-  { section: 'Finance',     title: 'Driver Advances',    href: '/accountant/advances',     icon: Users,         roles: ['Accountant'] },
+  { section: 'Finance',     title: 'Driver + 3RD Party Transaction', href: '/accountant/advances',     icon: Users,         roles: ['Accountant'] },
   { section: 'Finance',     title: 'Daily Expenses',     href: '/accountant/expense-entry',icon: DollarSign,    roles: ['Accountant'] },
   { section: 'Reports',     title: 'Accounting Report',  href: '/accountant/reports',      icon: FileText,      roles: ['Accountant'] },
   { section: 'Reports',     title: 'Financial Overview', href: '/accountant/financial-overview', icon: Activity, roles: ['Accountant'] },

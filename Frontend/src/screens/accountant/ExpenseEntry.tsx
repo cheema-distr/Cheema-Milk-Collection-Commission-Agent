@@ -249,7 +249,7 @@ export default function ExpenseEntry() {
               {/* Filters */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5"> <div className="relative"> <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--text-muted)]" /> <input type="search" placeholder="Search payee…" value={search} onChange={e=>setSearch(e.target.value)} className="form-input form-input-sm pl-8" /> </div> <select value={catFilter} onChange={e=>setCatFilter(e.target.value)} className="form-input form-input-sm"> <option value="All">All Categories</option>
                   {CATEGORIES.map(c=><option key={c}>{c}</option>)}
-                  <optgroup label="── Driver Advances ──">
+                  <optgroup label="── Driver + 3RD Party Transaction ──">
                     {ADVANCE_CATEGORIES.map(c=><option key={c} value={c}>{c}</option>)}
                   </optgroup>
                 </select> <input type="date" value={dateFilter} onChange={e=>setDateFilter(e.target.value)} className="form-input form-input-sm" /> </div> <p className="text-xs text-[var(--text-muted)]">{sortedRecords.length} record{sortedRecords.length!==1?'s':''} found</p> <div className="table-wrapper"> <div className="table-scroll"> <table className="data-table whitespace-nowrap"><thead><tr><th>#</th><th>Date</th><th>Category</th> <th>From</th><th>To</th><th>Method</th> <th className="text-right">Amount</th>

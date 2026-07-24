@@ -329,7 +329,7 @@ export default function AdminDashboard() {
             { label:'Purchase Ledger',  href:'/admin/purchase-ledger',  color:'indigo' },
             { label:'Sale Ledger',      href:'/admin/sale-ledger',      color:'teal'   },
             { label:'Profit & Loss',    href:'/admin/pnl',              color:'amber'  },
-            { label:'Driver Advances',  href:'/admin/advances',         color:'rose'   },
+            { label:'Driver + 3RD Party Transaction',  href:'/admin/advances',         color:'rose'   },
           ].map(({ label, href, color }) => (
             <button
               key={href}
