@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AnimatePresence } from 'motion/react';
 import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -74,7 +74,7 @@ export default function App() {
 
           {/* App — sirf tab render hoga jab splash khatam ho jaye */}
           {!showSplash && (
-            <BrowserRouter> <Routes> <Route path="/login" element={<Login />} />
+            <HashRouter> <Routes> <Route path="/login" element={<Login />} />
               
               {/* Admin Routes */}
               <Route element={<ProtectedRoute allowedRoles={['Admin']} />}> <Route path="/admin" element={<AdminDashboard />} /> <Route path="/admin/routes" element={<RouteManagement />} /> <Route path="/admin/collections" element={<AdminRouteCollections />} /> <Route path="/admin/users" element={<UserManagement />} /> <Route path="/admin/vehicles" element={<VehicleManagement />} /> <Route path="/admin/driver-reports" element={<AdminDriverReports />} /> <Route path="/admin/sale-ledger" element={<SaleLedger />} /> <Route path="/admin/purchase-ledger" element={<PurchaseLedger />} /> <Route path="/admin/farmer-purchases" element={<MilkPurchases />} /> <Route path="/admin/sales" element={<MilkSales />} /> <Route path="/admin/account-reports" element={<AdminAccountReports />} /> <Route path="/admin/expense-entry" element={<ExpenseEntry />} /> <Route path="/admin/pnl" element={<AdminPnL />} /> <Route path="/admin/advances" element={<AdminAdvances />} /> <Route path="/admin/dispatch" element={<AdminDispatch />} /> </Route>
@@ -86,7 +86,7 @@ export default function App() {
               <Route element={<ProtectedRoute allowedRoles={['Accountant']} />}> <Route path="/accountant" element={<AccountantDashboard />} /> <Route path="/accountant/collections" element={<AdminRouteCollections />} /> <Route path="/accountant/advances" element={<AccountantAdvances />} /> <Route path="/accountant/farmer-purchases" element={<MilkPurchases />} /> <Route path="/accountant/sales" element={<MilkSales />} /> <Route path="/accountant/purchase-ledger" element={<PurchaseLedger />} /> <Route path="/accountant/sale-ledger" element={<SaleLedger />} /> <Route path="/accountant/expense-entry" element={<ExpenseEntry />} /> <Route path="/accountant/reports" element={<AccountantReports />} /> <Route path="/accountant/financial-overview" element={<FinancialOverview />} /> <Route path="/accountant/dispatch" element={<AdminDispatch />} /> <Route path="/accountant/vehicles" element={<VehicleManagement />} /> </Route>
 
               <Route path="*" element={<Navigate to="/login" replace />} />
-            </Routes> </BrowserRouter>
+            </Routes> </HashRouter>
           )}
 
         </DispatchProvider> </AdvanceProvider> </RouteCollectionProvider> </RouteProvider> </AccountProvider> </MilkTransactionProvider> </TransactionProvider> </VehicleProvider> </UserProvider> </AuthProvider> </ThemeProvider>
