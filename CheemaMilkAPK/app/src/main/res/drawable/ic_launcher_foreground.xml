@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Milk drop shape -->
+    <path
+        android:fillColor="#a7f3d0"
+        android:pathData="M54,20 C54,20 30,50 30,65 C30,79 41,88 54,88 C67,88 78,79 78,65 C78,50 54,20 54,20 Z" />
+    <!-- CM text -->
+    <path
+        android:fillColor="#064e3b"
+        android:pathData="M40,72 L40,58 L46,58 L50,66 L54,58 L60,58 L60,72 L56,72 L56,64 L52,72 L48,72 L44,64 L44,72 Z" />
+</vector>
