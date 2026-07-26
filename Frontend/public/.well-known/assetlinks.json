@@ -3,6 +3,8 @@
   "target": {
     "namespace": "android_app",
     "package_name": "com.cheemamilk.app",
-    "sha256_cert_fingerprints": ["REPLACE_WITH_YOUR_SHA256_FINGERPRINT"]
+    "sha256_cert_fingerprints": [
+      "0F:0C:D4:8F:93:48:B1:2E:DE:6F:45:FF:A3:53:92:59:06:C7:79:29:D9:8B:EF:BD:A8:4E:17:82:54:90:85:68"
+    ]
   }
 }]
