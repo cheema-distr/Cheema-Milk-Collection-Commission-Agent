@@ -1883,7 +1883,8 @@ export default function SaleLedger() {
                             { header: 'Qty', dataKey: 'milkQtyStr' },
                             { header: 'Milk Value (+Rs.)', dataKey: 'totalAmount' },
                             { header: 'Advance (-Rs.)', dataKey: 'advanceAmount' },
-                            { header: 'Cash Net (-Rs.)', dataKey: 'paymentReceived' }
+                            { header: 'Cash Net (-Rs.)', dataKey: 'paymentReceived' },
+                            { header: 'Notes', dataKey: 'notes' }
                           ];
                           const enrichedList = filteredDailyEntriesFlat.map(e => ({
                             ...e,
@@ -2485,7 +2486,8 @@ export default function SaleLedger() {
                           { header: 'Advance', dataKey: 'advanceAmount' },
                           { header: 'Paid', dataKey: 'paymentReceived' },
                           { header: 'Vichle Rent', dataKey: 'vehicleRent' },
-                          { header: 'Balance', dataKey: 'remainingBalanceState' }
+                          { header: 'Balance', dataKey: 'remainingBalanceState' },
+                          { header: 'Notes', dataKey: 'notes' }
                         ];
                         const pdfRows = displayTimeline.map(t => ({
                           date: fmtDate(t.date),
@@ -2505,7 +2507,8 @@ export default function SaleLedger() {
                           advanceAmount: `- Rs. ${Number(t.advanceAmount).toFixed(2)}`,
                           paymentReceived: `- Rs. ${Number(t.paymentReceived).toFixed(2)}`,
                           vehicleRent: (t.vehicleRent || 0) > 0 ? `- Rs. ${Number(t.vehicleRent).toFixed(2)}` : '-',
-                          remainingBalanceState: `Rs. ${Number(t.remainingBalanceState).toFixed(2)}`
+                          remainingBalanceState: `Rs. ${Number(t.remainingBalanceState).toFixed(2)}`,
+                          notes: t.notes || '-'
                         }));
                         downloadTransactionsPDF(`${profile.customerName} Ledger Report`, cols, pdfRows, `${profile.customerName}_Ledger`);
                       }}
@@ -2519,7 +2522,7 @@ export default function SaleLedger() {
                     > <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> <span>Add New Entry</span> </button> </div> </div>
 
                 {/* Transactions History — SCROLLABLE, takes remaining height */}
-                <div className="flex-1 overflow-y-auto min-h-0 bg-slate-50/10"> <div className="p-2 sm:p-6"> <div className="border border-slate-200 rounded-2xl overflow-hidden bg-white shadow-sm overflow-x-auto"> <table className="w-full text-xs text-left" style={{minWidth: '700px'}}><thead className="bg-slate-50 text-slate-500 font-bold uppercase border-b border-slate-200"><tr><th className="px-3 py-3 text-left whitespace-nowrap">Date/Time</th> <th className="px-3 py-3 text-center whitespace-nowrap">Milk Qty</th> <th className="px-2 py-3 text-center whitespace-nowrap">FAT %</th> <th className="px-2 py-3 text-center whitespace-nowrap">LR</th> <th className="px-2 py-3 text-center whitespace-nowrap">SNF %</th> <th className="px-2 py-3 text-center whitespace-nowrap">TS %</th> <th className="px-3 py-3 text-center font-bold whitespace-nowrap">TF (Kg)</th> <th className="px-3 py-3 text-right whitespace-nowrap">Milk Price</th> <th className="px-3 py-3 text-center whitespace-nowrap">Advance</th> <th className="px-3 py-3 text-center whitespace-nowrap">Net Cash</th> <th className="px-3 py-3 text-center font-bold text-orange-600 whitespace-nowrap">Vichle Rent</th> <th className="px-3 py-3 text-center font-bold text-amber-600 whitespace-nowrap">Discount</th> <th className="px-3 py-3 text-center whitespace-nowrap">Spoiled Deduct</th> <th className="px-4 py-3 text-right whitespace-nowrap">Remaining Bal</th></tr></thead><tbody className="divide-y divide-slate-100">
+                <div className="flex-1 overflow-y-auto min-h-0 bg-slate-50/10"> <div className="p-2 sm:p-6"> <div className="border border-slate-200 rounded-2xl overflow-hidden bg-white shadow-sm overflow-x-auto"> <table className="w-full text-xs text-left" style={{minWidth: '700px'}}><thead className="bg-slate-50 text-slate-500 font-bold uppercase border-b border-slate-200"><tr><th className="px-3 py-3 text-left whitespace-nowrap">Date/Time</th> <th className="px-3 py-3 text-center whitespace-nowrap">Milk Qty</th> <th className="px-2 py-3 text-center whitespace-nowrap">FAT %</th> <th className="px-2 py-3 text-center whitespace-nowrap">LR</th> <th className="px-2 py-3 text-center whitespace-nowrap">SNF %</th> <th className="px-2 py-3 text-center whitespace-nowrap">TS %</th> <th className="px-3 py-3 text-center font-bold whitespace-nowrap">TF (Kg)</th> <th className="px-3 py-3 text-right whitespace-nowrap">Milk Price</th> <th className="px-3 py-3 text-center whitespace-nowrap">Advance</th> <th className="px-3 py-3 text-center whitespace-nowrap">Net Cash</th> <th className="px-3 py-3 text-center font-bold text-orange-600 whitespace-nowrap">Vichle Rent</th> <th className="px-3 py-3 text-center font-bold text-amber-600 whitespace-nowrap">Discount</th> <th className="px-3 py-3 text-center whitespace-nowrap">Spoiled Deduct</th> <th className="px-4 py-3 text-right whitespace-nowrap">Remaining Bal</th> <th className="px-3 py-3 text-left whitespace-nowrap">Notes</th></tr></thead><tbody className="divide-y divide-slate-100">
                         {displayTimeline.length > 0 ? [...displayTimeline].reverse().map((item, idx) => {
                           const tsPercent = (item.fat || 0) + (item.snf || 0);
                           return (
@@ -2578,7 +2581,7 @@ export default function SaleLedger() {
                                     item.remainingBalanceState > 0 ? 'text-rose-700' : 'text-emerald-700'
                                   }`}>
                                     Rs. {fmtAmt(item.remainingBalanceState)}
-                                  </span> </td></tr>
+                                  </span> </td> <td className="px-3 py-4 text-left whitespace-nowrap"> <span className="text-xs text-slate-600 italic">{item.notes || '—'}</span> </td></tr>
                               {((item.isSpoiled && (item.spoiledAmount || 0) > 0) || (item.discountAmount !== undefined && item.discountAmount > 0)) && (<tr className="bg-rose-50/20 text-[10.5px] border-b border-rose-100/50 text-left"><td colSpan={1} className="pl-3 py-2 text-center font-extrabold text-indigo-700 font-sans uppercase">
                                       Details
                                   </td> <td colSpan={12} className="px-4 py-2 text-slate-700 text-left space-y-1">

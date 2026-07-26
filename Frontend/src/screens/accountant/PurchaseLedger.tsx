@@ -1943,7 +1943,8 @@ export default function PurchaseLedger() {
                             { header: 'Qty', dataKey: 'milkQtyStr' },
                             { header: 'Milk Value (+Rs.)', dataKey: 'totalAmount' },
                             { header: 'Advance (-Rs.)', dataKey: 'advanceAmount' },
-                            { header: 'Cash Net (-Rs.)', dataKey: 'paymentReceived' }
+                            { header: 'Cash Net (-Rs.)', dataKey: 'paymentReceived' },
+                            { header: 'Notes', dataKey: 'notes' }
                           ];
                           const enrichedList = filteredDailyEntriesFlat.map(e => ({
                             ...e,
@@ -2578,7 +2579,8 @@ export default function PurchaseLedger() {
                           { header: 'Spoiled', dataKey: 'spoiled' },
                           { header: 'Advance', dataKey: 'advanceAmount' },
                           { header: 'Paid', dataKey: 'paymentReceived' },
-                          { header: 'Balance', dataKey: 'remainingBalanceState' }
+                          { header: 'Balance', dataKey: 'remainingBalanceState' },
+                          { header: 'Notes', dataKey: 'notes' }
                         ];
                         const pdfRows = displayTimeline.map(t => ({
                           date: fmtDate(t.date),
@@ -2593,7 +2595,8 @@ export default function PurchaseLedger() {
                           spoiled: t.spoiledAmount ? `Rs. ${Number(t.spoiledAmount).toFixed(2)}` : '-',
                           advanceAmount: `+ Rs. ${Number(t.advanceAmount).toFixed(2)}`,
                           paymentReceived: `+ Rs. ${Number(t.paymentReceived).toFixed(2)}`,
-                          remainingBalanceState: `Rs. ${Number(t.remainingBalanceState).toFixed(2)}`
+                          remainingBalanceState: `Rs. ${Number(t.remainingBalanceState).toFixed(2)}`,
+                          notes: t.notes || '-'
                         }));
                         downloadTransactionsPDF(`${profile.supplierName} Ledger Report`, cols, pdfRows, `${profile.supplierName}_Ledger`);
                       }}
@@ -2607,7 +2610,7 @@ export default function PurchaseLedger() {
                     > <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> <span>Add New Entry</span> </button> </div> </div>
 
                 {/* Transactions History — SCROLLABLE, takes remaining height */}
-                <div className="flex-1 overflow-y-auto min-h-0 bg-slate-50/10"> <div className="p-2 sm:p-6"> <div className="border border-slate-200 rounded-2xl overflow-hidden bg-white shadow-sm overflow-x-auto"> <table className="w-full text-xs text-left" style={{minWidth: '700px'}}><thead className="bg-slate-50 text-slate-500 font-bold uppercase border-b border-slate-200"><tr><th className="px-3 py-3 text-left whitespace-nowrap">Date/Time</th> <th className="px-3 py-3 text-center whitespace-nowrap">Milk Qty</th> <th className="px-2 py-3 text-center whitespace-nowrap">FAT %</th> <th className="px-2 py-3 text-center whitespace-nowrap">LR</th> <th className="px-2 py-3 text-center whitespace-nowrap">SNF %</th> <th className="px-2 py-3 text-center whitespace-nowrap">TS %</th> <th className="px-3 py-3 text-center font-bold whitespace-nowrap">TF (Kg)</th> <th className="px-3 py-3 text-right whitespace-nowrap">Purchase Price</th> <th className="px-3 py-3 text-center whitespace-nowrap">Advance</th> <th className="px-3 py-3 text-center whitespace-nowrap">Cash Paid</th> <th className="px-3 py-3 text-center whitespace-nowrap">Discount</th> <th className="px-3 py-3 text-center whitespace-nowrap">Returned Spoiled</th> <th className="px-4 py-3 text-right whitespace-nowrap">Running Balance</th></tr></thead><tbody className="divide-y divide-slate-100">
+                <div className="flex-1 overflow-y-auto min-h-0 bg-slate-50/10"> <div className="p-2 sm:p-6"> <div className="border border-slate-200 rounded-2xl overflow-hidden bg-white shadow-sm overflow-x-auto"> <table className="w-full text-xs text-left" style={{minWidth: '700px'}}><thead className="bg-slate-50 text-slate-500 font-bold uppercase border-b border-slate-200"><tr><th className="px-3 py-3 text-left whitespace-nowrap">Date/Time</th> <th className="px-3 py-3 text-center whitespace-nowrap">Milk Qty</th> <th className="px-2 py-3 text-center whitespace-nowrap">FAT %</th> <th className="px-2 py-3 text-center whitespace-nowrap">LR</th> <th className="px-2 py-3 text-center whitespace-nowrap">SNF %</th> <th className="px-2 py-3 text-center whitespace-nowrap">TS %</th> <th className="px-3 py-3 text-center font-bold whitespace-nowrap">TF (Kg)</th> <th className="px-3 py-3 text-right whitespace-nowrap">Purchase Price</th> <th className="px-3 py-3 text-center whitespace-nowrap">Advance</th> <th className="px-3 py-3 text-center whitespace-nowrap">Cash Paid</th> <th className="px-3 py-3 text-center whitespace-nowrap">Discount</th> <th className="px-3 py-3 text-center whitespace-nowrap">Returned Spoiled</th> <th className="px-4 py-3 text-right whitespace-nowrap">Running Balance</th> <th className="px-3 py-3 text-left whitespace-nowrap">Notes</th></tr></thead><tbody className="divide-y divide-slate-100">
                         {displayTimeline.length > 0 ? [...displayTimeline].reverse().map((item, idx) => {
                           const tsPercent = (item.fat || 0) + (item.snf || 0);
                           return (
@@ -2660,7 +2663,7 @@ export default function PurchaseLedger() {
                                     item.remainingBalanceState > 0 ? 'text-rose-700' : 'text-emerald-700'
                                   }`}>
                                     Rs. {fmtAmt(item.remainingBalanceState)}
-                                  </span> </td></tr>
+                                  </span> </td> <td className="px-3 py-4 text-left whitespace-nowrap"> <span className="text-xs text-slate-600 italic">{item.notes || '—'}</span> </td></tr>
                               {((item.isSpoiled && (item.spoiledAmount || 0) > 0) || (item.discountAmount !== undefined && item.discountAmount > 0)) && (<tr className="bg-rose-50/10 text-[10.5px] border-b border-rose-100 text-left"><td colSpan={1} className="pl-3 py-2 text-center font-extrabold text-indigo-700 font-sans uppercase">
                                       Details
                                   </td> <td colSpan={12} className="px-4 py-2 leading-relaxed text-slate-700 text-left space-y-1">
