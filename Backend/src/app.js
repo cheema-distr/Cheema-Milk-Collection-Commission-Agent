@@ -41,6 +41,8 @@ app.set('x-powered-by', false);
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
+  'https://cheemamilkcollection.com',
+  'https://www.cheemamilkcollection.com',
   process.env.FRONTEND_URL,
 ].filter(Boolean);
 
