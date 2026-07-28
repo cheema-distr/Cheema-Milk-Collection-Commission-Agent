@@ -159,6 +159,13 @@ const classifyError = (err: unknown): string => {
   if (status === 404 || msg.includes('not found') || msg.includes('Not Found')) {
     return `NotFoundError: Record does not exist on server. Original: ${msg}`;
   }
+  // 401 No token / 403 Forbidden → permanent, retrying won't help
+  if (status === 401 || msg.includes('No token provided') || msg.includes('Please login')) {
+    return `AuthError: Token missing or expired. Original: ${msg}`;
+  }
+  if (status === 403 || msg.includes('not allowed') || msg.includes('Required:')) {
+    return `ForbiddenError: Insufficient permissions. Original: ${msg}`;
+  }
   if (msg.includes('ECONNREFUSED') || msg.includes('Failed to fetch') || msg.includes('NetworkError')) {
     return `NetworkError: Cannot reach backend. Original: ${msg}`;
   }
@@ -239,7 +246,9 @@ export const syncPendingOperations = async (): Promise<{
         errorMessage.startsWith('CastError') ||
         errorMessage.startsWith('ValidationError') ||
         errorMessage.startsWith('DuplicateKeyError') ||
-        errorMessage.startsWith('NotFoundError');
+        errorMessage.startsWith('NotFoundError') ||
+        errorMessage.startsWith('AuthError') ||
+        errorMessage.startsWith('ForbiddenError');
 
       // BUG FIX: Pehle network/timeout jaisi TRANSIENT errors bhi 3 retries ke
       // baad hamesha ke liye discard ho jati thin — matlab agar backend 1-2
