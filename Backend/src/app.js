@@ -163,7 +163,24 @@ app.use('/api/sync-logs', syncLogRoutes);
 app.use(notFoundHandler);
 app.use(errorHandler);
 
-// ─── Start Server ─────────────────────────────────────────────────────────────
+// ─── Self-Ping (Render free plan sleep prevention) ───────────────────────────
+// Har 10 minute mein apne aap ko ping karo taake server sleep na ho
+if (process.env.NODE_ENV === 'production') {
+  const SELF_URL = process.env.RENDER_EXTERNAL_URL || process.env.FRONTEND_URL?.replace('3000', '10000');
+  if (SELF_URL) {
+    setInterval(async () => {
+      try {
+        const url = SELF_URL.includes('onrender.com')
+          ? `${SELF_URL}/api/health`
+          : `https://cheema-milk-collection-commission-agent-lnil.onrender.com/api/health`;
+        await fetch(url);
+        console.log('[KeepAlive] Self-ping sent');
+      } catch { /* ignore */ }
+    }, 10 * 60 * 1000); // 10 minutes
+  }
+}
+
+
 // Render / Railway / local development — hamesha listen karo
 // Vercel serverless pe yeh block skip hota hai (module.exports = app kafi hai)
 const PORT = process.env.PORT || 5000;
