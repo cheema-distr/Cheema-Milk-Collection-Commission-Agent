@@ -47,7 +47,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     try {
       if (isOnline()) {
-        const result = await authApi.login(username, password) as any;
+        // Cold start retry — ERR_CONNECTION_CLOSED pe ek baar aur try karo
+        let result: any;
+        let lastErr: unknown;
+        for (let attempt = 1; attempt <= 3; attempt++) {
+          try {
+            result = await authApi.login(username, password);
+            break; // success
+          } catch (err: any) {
+            lastErr = err;
+            const msg = err?.message || '';
+            const isConnErr = msg.includes('Failed to fetch') || msg.includes('ERR_CONNECTION') || msg.includes('NetworkError') || msg.includes('network');
+            if (isConnErr && attempt < 3) {
+              // Backend waking up — 3 second wait karke retry
+              await new Promise(r => setTimeout(r, 3000));
+              continue;
+            }
+            throw err;
+          }
+        }
+        if (!result) throw lastErr;
+
         const backendUser = result.data.user;
         const token = result.data.token;
 
