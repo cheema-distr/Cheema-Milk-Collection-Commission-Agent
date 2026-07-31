@@ -1034,7 +1034,8 @@ export default function PurchaseLedger() {
       const totalAmount = entry ? entry.totalAmount : 0;
       const advanceAmount = entry ? entry.advanceAmount : 0;
       const paymentReceived = entry ? entry.paymentReceived : 0;
-      const calculatedRem = prevBal - totalAmount + advanceAmount + paymentReceived;
+      const discountAmount = entry ? (entry.discountAmount || 0) : 0;
+      const calculatedRem = prevBal - totalAmount + advanceAmount + paymentReceived + discountAmount;
 
       return {
         supplierName: p.supplierName,
@@ -1266,7 +1267,7 @@ export default function PurchaseLedger() {
 
     // Retrieve previous outstanding balance for that exact supplier profile up to this exact moment
     const prevBalance = getSupplierCurrentBalance(activeProfileForEntry);
-    const calculatedRemaining = prevBalance - actualMilkAddedToBalance + advanceValue + cashValue;
+    const calculatedRemaining = prevBalance - actualMilkAddedToBalance + advanceValue + cashValue + discountValue;
 
     // NOTE: addRecords call hata diya � woh milkRecordsApi.createBulk call karta tha
     // jo MilkRecord + PurchaseLedger dono mein entry banata tha.
@@ -1819,9 +1820,9 @@ export default function PurchaseLedger() {
                         // Previous Outstanding auto-loads prior to the selection date. Read-only.
                         const prevBal = supplierPrevBalanceMap.get(p.id) ?? getSupplierBalanceBeforeDate(p, selectedDate);
                         
-                        // Calculated remaining: Previous outstanding - Milk + Advance + Cash
+                        // Calculated remaining: Previous outstanding - Milk + Advance + Cash + Discount
                         const calculatedRem = entry 
-                          ? prevBal - entry.totalAmount + entry.advanceAmount + entry.paymentReceived
+                          ? prevBal - entry.totalAmount + entry.advanceAmount + entry.paymentReceived + (entry.discountAmount || 0)
                           : prevBal;
 
                         return (<tr key={p.id} className="hover:bg-slate-50/50 transition">
@@ -2080,7 +2081,7 @@ export default function PurchaseLedger() {
         const actualMilkAddedToBalance = milkValue - spoiledValue - discountValue;
 
         // Auto-calculating formula preview
-        const calculatedRemaining = prevBal - actualMilkAddedToBalance + advanceValue + cashValue;
+        const calculatedRemaining = prevBal - actualMilkAddedToBalance + advanceValue + cashValue + discountValue;
 
         // HISTORY PREVIEW DATA
         const recentHistory = getSupplierTransactionsTimeline(activeProfileForEntry).slice(0, 3);
