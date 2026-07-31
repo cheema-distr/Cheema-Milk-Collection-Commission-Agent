@@ -1870,7 +1870,11 @@ export default function PurchaseLedger() {
 
                             {/* Advance amount */}
                             <td className="px-4 py-3.5 font-mono text-indigo-700 text-left">
-                              {entry && entry.advanceAmount > 0 ? `+ Rs. ${fmtAmt(entry.advanceAmount)}` : '�'}
+                              {entry && (entry.advanceAmount !== 0 && entry.advanceAmount !== undefined && entry.advanceAmount !== null) ? (
+                                <span className={entry.advanceAmount < 0 ? 'text-rose-600' : ''}>
+                                  {entry.advanceAmount < 0 ? `- Rs. ${fmtAmt(Math.abs(entry.advanceAmount))}` : `+ Rs. ${fmtAmt(entry.advanceAmount)}`}
+                                </span>
+                              ) : '—'}
                             </td>
 
                             {/* Cash Net Paid */}
@@ -2640,9 +2644,9 @@ export default function PurchaseLedger() {
                                 </td> <td className="px-3 py-4 text-right whitespace-nowrap"> <span className="font-black text-slate-850 font-mono text-xs block">Rs. {fmtAmt(item.totalAmount)}</span>
                                   {item.rate > 0 && <span className="text-[9px] text-slate-400 block pb-0.5">@ Rs. {item.rate}</span>}
                                 </td> <td className="px-3 py-4 text-center whitespace-nowrap">
-                                  {item.advanceAmount > 0 ? (
-                                    <span className="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-full font-bold text-[10px] border border-indigo-100">
-                                      + Rs. {fmtAmt(item.advanceAmount)}
+                                  {item.advanceAmount !== 0 && item.advanceAmount !== undefined ? (
+                                    <span className={`px-2 py-0.5 rounded-full font-bold text-[10px] border ${item.advanceAmount < 0 ? 'bg-rose-50 text-rose-700 border-rose-100' : 'bg-indigo-50 text-indigo-700 border-indigo-100'}`}>
+                                      {item.advanceAmount < 0 ? `- Rs. ${fmtAmt(Math.abs(item.advanceAmount))}` : `+ Rs. ${fmtAmt(item.advanceAmount)}`}
                                     </span>
                                   ) : '—'}
                                 </td> <td className="px-3 py-4 text-center whitespace-nowrap">
