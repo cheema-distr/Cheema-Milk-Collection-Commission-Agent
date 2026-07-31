@@ -1875,7 +1875,11 @@ export default function PurchaseLedger() {
 
                             {/* Cash Net Paid */}
                             <td className="px-4 py-3.5 font-mono text-emerald-700 text-left">
-                              {entry && entry.paymentReceived > 0 ? `+ Rs. ${fmtAmt(entry.paymentReceived)}` : '�'}
+                              {entry && (entry.paymentReceived !== 0 && entry.paymentReceived !== undefined && entry.paymentReceived !== null) ? (
+                                <span className={entry.paymentReceived < 0 ? 'text-rose-600' : ''}>
+                                  {entry.paymentReceived < 0 ? `- Rs. ${fmtAmt(Math.abs(entry.paymentReceived))}` : `+ Rs. ${fmtAmt(entry.paymentReceived)}`}
+                                </span>
+                              ) : '—'}
                             </td>
 
                             {/* Remaining Balance calculated sequentially */}
@@ -2642,9 +2646,9 @@ export default function PurchaseLedger() {
                                     </span>
                                   ) : '—'}
                                 </td> <td className="px-3 py-4 text-center whitespace-nowrap">
-                                  {item.paymentReceived > 0 ? (
-                                    <span className="px-2 py-0.5 bg-teal-50 text-teal-700 rounded-full font-bold text-[10px] border border-teal-100">
-                                      + Rs. {fmtAmt(item.paymentReceived)}
+                                  {item.paymentReceived !== 0 && item.paymentReceived !== undefined ? (
+                                    <span className={`px-2 py-0.5 rounded-full font-bold text-[10px] border ${item.paymentReceived < 0 ? 'bg-rose-50 text-rose-700 border-rose-100' : 'bg-teal-50 text-teal-700 border-teal-100'}`}>
+                                      {item.paymentReceived < 0 ? `- Rs. ${fmtAmt(Math.abs(item.paymentReceived))}` : `+ Rs. ${fmtAmt(item.paymentReceived)}`}
                                     </span>
                                   ) : '—'}
                                 </td> <td className="px-3 py-4 text-center whitespace-nowrap">
