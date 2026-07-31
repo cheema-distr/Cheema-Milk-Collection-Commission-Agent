@@ -1261,12 +1261,13 @@ export default function PurchaseLedger() {
       }
     }
     
-    const actualMilkAddedToBalance = milkValue - spoiledValue - discountValue;
+    const actualMilkAddedToBalance = milkValue - spoiledValue;
     const netMilkValue = actualMilkAddedToBalance;
     const netMilkLiter = (Number(calcLiters) || 0) - (Number(spoiledLiters) || 0);
 
     // Retrieve previous outstanding balance for that exact supplier profile up to this exact moment
     const prevBalance = getSupplierCurrentBalance(activeProfileForEntry);
+    // Discount increases outstanding (supplier gave discount = we owe more in future tracking)
     const calculatedRemaining = prevBalance - actualMilkAddedToBalance + advanceValue + cashValue + discountValue;
 
     // NOTE: addRecords call hata diya � woh milkRecordsApi.createBulk call karta tha
@@ -2078,9 +2079,9 @@ export default function PurchaseLedger() {
           }
         }
         
-        const actualMilkAddedToBalance = milkValue - spoiledValue - discountValue;
+        const actualMilkAddedToBalance = milkValue - spoiledValue;
 
-        // Auto-calculating formula preview
+        // Auto-calculating formula preview — discount increases outstanding balance
         const calculatedRemaining = prevBal - actualMilkAddedToBalance + advanceValue + cashValue + discountValue;
 
         // HISTORY PREVIEW DATA
