@@ -216,6 +216,7 @@ export default function SaleLedger() {
   // Tab Management State
   const [activeTab, setActiveTab] = useState<'customers' | 'daily' | 'add'>('customers');
   const [isEntryReadOnly, setIsEntryReadOnly] = useState<boolean>(false);
+  const [isSavingEntry, setIsSavingEntry] = useState<boolean>(false);
 
   // Active dates for ledger listings
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
@@ -1169,6 +1170,8 @@ export default function SaleLedger() {
   // HANDLER: SUBMIT / SAVE SALE ENTRY
   const handleSaveSaleEntry = () => {
     if (!activeProfileForEntry) return;
+    if (isSavingEntry) return; // prevent double submit
+    setIsSavingEntry(true);
 
     const hasMilkVolume = Number(calcLiters) > 0;
     const entryMilkValue = Number(entryMilkPKR) || 0;
@@ -1179,11 +1182,13 @@ export default function SaleLedger() {
 
     if (!hasMilkVolume && entryMilkValue > 0) {
       showToast('Please enter milk liters before saving milk value.', 'error');
+      setIsSavingEntry(false);
       return;
     }
 
     if (!hasMilkVolume && entryMilkValue === 0 && advanceValue === 0 && cashValue === 0 && discountValue === 0 && vehicleRentValue === 0 && !entryIsSpoiled) {
       showToast('No transaction provided. Enter milk volume or payment details to save.', 'error');
+      setIsSavingEntry(false);
       return;
     }
 
@@ -1332,6 +1337,7 @@ export default function SaleLedger() {
       });
     showToast(labels.successSave, "success");
     setShowEntryModal(false);
+    setIsSavingEntry(false);
 
     // Trigger WhatsApp notification options modal!
     setWhatsappEntry(updatedEntry);
@@ -2362,8 +2368,9 @@ export default function SaleLedger() {
                       <button
                         type="button"
                         onClick={handleSaveSaleEntry}
-                        className="px-6 py-2 bg-emerald-600 hover:bg-emerald-750 text-white shadow-md font-extrabold rounded-xl text-xs flex items-center gap-1.5 cursor-pointer font-sans"
-                      > <Save className="w-4.5 h-4.5" /> <span>{labels.saveTransaction}</span> </button>
+                        disabled={isSavingEntry}
+                        className={`px-6 py-2 text-white shadow-md font-extrabold rounded-xl text-xs flex items-center gap-1.5 cursor-pointer font-sans ${isSavingEntry ? 'bg-emerald-400 cursor-not-allowed' : 'bg-emerald-600 hover:bg-emerald-750'}`}
+                      > <Save className="w-4.5 h-4.5" /> <span>{isSavingEntry ? 'Saving...' : labels.saveTransaction}</span> </button>
                     )
                   )}
                 </div> </div> </div> </div>
