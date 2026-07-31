@@ -9,6 +9,7 @@ const saleLedgerSchema = new mongoose.Schema(
   {
     date: { type: String, required: true },
     time: { type: String, default: '' },
+    localId: { type: String, default: null, index: true }, // frontend ID for dedup
     customerProfileId: { type: mongoose.Schema.Types.ObjectId, ref: 'CustomerProfile', default: null },
     customerName: { type: String, required: true, trim: true },
     phoneNumber: { type: String, default: '' },

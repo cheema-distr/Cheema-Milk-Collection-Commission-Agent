@@ -263,8 +263,7 @@ const createSaleLedgerEntry = asyncHandler(async (req, res) => {
     return ApiResponse.ok(null, 'Skipped — empty entry has no transaction value').send(res);
   }
   
-  // Duplicate check: sirf same MongoDB _id wali entry block karo
-  // Same values wali 2 alag entries ALLOWED hain — genuinely 2 baar sale ho sakti hai
+  // Duplicate check 1: same MongoDB _id
   if (req.body.id && /^[a-f\d]{24}$/i.test(String(req.body.id))) {
     const existing = await SaleLedger.findById(req.body.id);
     if (existing) {
@@ -272,7 +271,22 @@ const createSaleLedgerEntry = asyncHandler(async (req, res) => {
     }
   }
 
-  const entry = await SaleLedger.create({ ...req.body, createdBy: req.user._id });
+  // Duplicate check 2: same frontend localId (non-mongo IDs like sale_xxx)
+  if (req.body.id && req.body.customerProfileId) {
+    const existing = await SaleLedger.findOne({
+      localId: req.body.id,
+      customerProfileId: req.body.customerProfileId,
+    });
+    if (existing) {
+      return ApiResponse.ok(existing, 'Entry already exists (localId)').send(res);
+    }
+  }
+
+  const entry = await SaleLedger.create({
+    ...req.body,
+    localId: req.body.id, // store frontend ID for dedup
+    createdBy: req.user._id,
+  });
   return ApiResponse.created(entry, 'Sale ledger entry added').send(res);
 });
 
