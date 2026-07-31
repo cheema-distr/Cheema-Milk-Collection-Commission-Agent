@@ -40,7 +40,7 @@ const getPurchaseLedger = asyncHandler(async (req, res) => {
     (e.totalAmount || 0) !== 0 ||
     (e.advanceAmount || 0) !== 0 ||
     (e.paymentReceived || 0) !== 0 ||
-    (e.discountAmount || 0) > 0
+    (e.discountAmount || 0) !== 0
   );
 
   // NOTE: Dedupe yahan NAHI karni — same party se same rate pe genuinely 2 baar
@@ -524,10 +524,8 @@ const getSupplierRunningBalance = asyncHandler(async (req, res) => {
   let runningBalance = supplier.openingBalance || 0;
   const ledgerWithBalance = entries.map(entry => {
     const e = entry.toObject();
-    // Purchase: milk adds to balance (we owe supplier), payments reduce it
-    // Discount: supplier gave discount = we owe MORE (balance increases)
     runningBalance = runningBalance + e.totalAmount - e.advanceAmount - e.paymentReceived - (e.vehicleRent || 0);
-    if (e.discountAmount) runningBalance += e.discountAmount;  // discount adds to balance
+    if (e.discountAmount) runningBalance -= e.discountAmount;
     if (e.isSpoiled && e.spoiledAmount) runningBalance -= e.spoiledAmount;
     return { ...e, runningBalance };
   });

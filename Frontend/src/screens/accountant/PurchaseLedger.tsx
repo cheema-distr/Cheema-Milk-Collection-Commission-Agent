@@ -743,9 +743,8 @@ export default function PurchaseLedger() {
 
     let cum = Number(profile.openingBalance) || 0;
     previousEntries.forEach(e => {
-      const net = (Number(e.totalAmount) || 0) - (Number(e.spoiledAmount) || 0);
-      // discount increases balance (200 + 100 discount = 300)
-      cum = cum - net + Number(e.advanceAmount) + Number(e.paymentReceived) + (Number(e.discountAmount) || 0);
+      const net = (Number(e.totalAmount) || 0) - (Number(e.spoiledAmount) || 0) - (Number(e.discountAmount) || 0);
+      cum = cum - net + Number(e.advanceAmount) + Number(e.paymentReceived);
     });
 
     return cum;
@@ -1035,8 +1034,7 @@ export default function PurchaseLedger() {
       const totalAmount = entry ? entry.totalAmount : 0;
       const advanceAmount = entry ? entry.advanceAmount : 0;
       const paymentReceived = entry ? entry.paymentReceived : 0;
-      const discountAmount = entry ? (entry.discountAmount || 0) : 0;
-      const calculatedRem = prevBal - totalAmount + advanceAmount + paymentReceived + discountAmount;
+      const calculatedRem = prevBal - totalAmount + advanceAmount + paymentReceived;
 
       return {
         supplierName: p.supplierName,
@@ -1262,14 +1260,13 @@ export default function PurchaseLedger() {
       }
     }
     
-    const actualMilkAddedToBalance = milkValue - spoiledValue;
+    const actualMilkAddedToBalance = milkValue - spoiledValue - discountValue;
     const netMilkValue = actualMilkAddedToBalance;
     const netMilkLiter = (Number(calcLiters) || 0) - (Number(spoiledLiters) || 0);
 
     // Retrieve previous outstanding balance for that exact supplier profile up to this exact moment
     const prevBalance = getSupplierCurrentBalance(activeProfileForEntry);
-    // Discount increases outstanding (supplier gave discount = we owe more in future tracking)
-    const calculatedRemaining = prevBalance - actualMilkAddedToBalance + advanceValue + cashValue + discountValue;
+    const calculatedRemaining = prevBalance - actualMilkAddedToBalance + advanceValue + cashValue;
 
     // NOTE: addRecords call hata diya � woh milkRecordsApi.createBulk call karta tha
     // jo MilkRecord + PurchaseLedger dono mein entry banata tha.
@@ -1507,9 +1504,8 @@ export default function PurchaseLedger() {
     
     filtered.forEach(item => {
       const start = running;
-      const net = (Number(item.totalAmount) || 0) - (Number(item.spoiledAmount) || 0);
-      // discount increases outstanding balance (200 dena tha + 100 discount = 300 dena hai)
-      const end = start - net + Number(item.advanceAmount) + Number(item.paymentReceived) + (Number(item.discountAmount) || 0);
+      const net = (Number(item.totalAmount) || 0) - (Number(item.spoiledAmount) || 0) - (Number(item.discountAmount) || 0);
+      const end = start - net + Number(item.advanceAmount) + Number(item.paymentReceived);
       
       finalTimeline.push({
         ...item,
@@ -1823,9 +1819,9 @@ export default function PurchaseLedger() {
                         // Previous Outstanding auto-loads prior to the selection date. Read-only.
                         const prevBal = supplierPrevBalanceMap.get(p.id) ?? getSupplierBalanceBeforeDate(p, selectedDate);
                         
-                        // Calculated remaining: Previous outstanding - Milk + Advance + Cash + Discount
+                        // Calculated remaining: Previous outstanding - Milk + Advance + Cash
                         const calculatedRem = entry 
-                          ? prevBal - entry.totalAmount + entry.advanceAmount + entry.paymentReceived + (entry.discountAmount || 0)
+                          ? prevBal - entry.totalAmount + entry.advanceAmount + entry.paymentReceived
                           : prevBal;
 
                         return (<tr key={p.id} className="hover:bg-slate-50/50 transition">
@@ -2081,10 +2077,10 @@ export default function PurchaseLedger() {
           }
         }
         
-        const actualMilkAddedToBalance = milkValue - spoiledValue;
+        const actualMilkAddedToBalance = milkValue - spoiledValue - discountValue;
 
-        // Auto-calculating formula preview — discount increases outstanding balance
-        const calculatedRemaining = prevBal - actualMilkAddedToBalance + advanceValue + cashValue + discountValue;
+        // Auto-calculating formula preview
+        const calculatedRemaining = prevBal - actualMilkAddedToBalance + advanceValue + cashValue;
 
         // HISTORY PREVIEW DATA
         const recentHistory = getSupplierTransactionsTimeline(activeProfileForEntry).slice(0, 3);
@@ -2660,9 +2656,9 @@ export default function PurchaseLedger() {
                                     </span>
                                   ) : '—'}
                                 </td> <td className="px-3 py-4 text-center whitespace-nowrap">
-                                  {item.discountAmount !== undefined && item.discountAmount > 0 ? (
-                                    <span className="px-2 py-0.5 bg-amber-50 text-amber-700 rounded-full font-bold text-[10px] border border-amber-100">
-                                      - Rs. {fmtAmt(item.discountAmount)}
+                                  {item.discountAmount !== undefined && item.discountAmount !== 0 ? (
+                                    <span className={`px-2 py-0.5 rounded-full font-bold text-[10px] border ${item.discountAmount < 0 ? 'bg-rose-50 text-rose-700 border-rose-100' : 'bg-amber-50 text-amber-700 border-amber-100'}`}>
+                                      {item.discountAmount < 0 ? `+ Rs. ${fmtAmt(Math.abs(item.discountAmount))}` : `- Rs. ${fmtAmt(item.discountAmount)}`}
                                     </span>
                                   ) : '—'}
                                 </td> <td className="px-3 py-4 text-center whitespace-nowrap">
