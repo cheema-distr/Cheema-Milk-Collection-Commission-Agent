@@ -743,8 +743,9 @@ export default function PurchaseLedger() {
 
     let cum = Number(profile.openingBalance) || 0;
     previousEntries.forEach(e => {
-      const net = (Number(e.totalAmount) || 0) - (Number(e.spoiledAmount) || 0) - (Number(e.discountAmount) || 0);
-      cum = cum - net + Number(e.advanceAmount) + Number(e.paymentReceived);
+      const net = (Number(e.totalAmount) || 0) - (Number(e.spoiledAmount) || 0);
+      // discount increases balance (200 + 100 discount = 300)
+      cum = cum - net + Number(e.advanceAmount) + Number(e.paymentReceived) + (Number(e.discountAmount) || 0);
     });
 
     return cum;
@@ -1506,8 +1507,9 @@ export default function PurchaseLedger() {
     
     filtered.forEach(item => {
       const start = running;
-      const net = (Number(item.totalAmount) || 0) - (Number(item.spoiledAmount) || 0) - (Number(item.discountAmount) || 0);
-      const end = start - net + Number(item.advanceAmount) + Number(item.paymentReceived);
+      const net = (Number(item.totalAmount) || 0) - (Number(item.spoiledAmount) || 0);
+      // discount increases outstanding balance (200 dena tha + 100 discount = 300 dena hai)
+      const end = start - net + Number(item.advanceAmount) + Number(item.paymentReceived) + (Number(item.discountAmount) || 0);
       
       finalTimeline.push({
         ...item,

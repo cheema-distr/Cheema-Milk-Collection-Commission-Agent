@@ -524,8 +524,10 @@ const getSupplierRunningBalance = asyncHandler(async (req, res) => {
   let runningBalance = supplier.openingBalance || 0;
   const ledgerWithBalance = entries.map(entry => {
     const e = entry.toObject();
+    // Purchase: milk adds to balance (we owe supplier), payments reduce it
+    // Discount: supplier gave discount = we owe MORE (balance increases)
     runningBalance = runningBalance + e.totalAmount - e.advanceAmount - e.paymentReceived - (e.vehicleRent || 0);
-    if (e.discountAmount) runningBalance -= e.discountAmount;
+    if (e.discountAmount) runningBalance += e.discountAmount;  // discount adds to balance
     if (e.isSpoiled && e.spoiledAmount) runningBalance -= e.spoiledAmount;
     return { ...e, runningBalance };
   });
