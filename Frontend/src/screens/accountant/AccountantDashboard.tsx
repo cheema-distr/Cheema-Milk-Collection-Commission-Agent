@@ -204,7 +204,7 @@ export default function AccountantDashboard() {
           </div>
           <div className="space-y-2.5">
             <MetricRow loading={loading} label="Today"      vol={pTodayVol} amt={pTodayAmt} color="#3b82f6" />
-            <MetricRow loading={loading} label="This Month" vol={pMonthVol} amt={pMonthAmt} color="#3b82f6" />
+            <MetricRow loading={loading} label="All Time" vol={pMonthVol} amt={pMonthAmt} color="#3b82f6" />
           </div>
           <button onClick={() => navigate('/accountant/farmer-purchases')} className="mt-3 w-full flex items-center justify-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-700 transition-colors py-1">
             View Purchases <ArrowRight className="w-3 h-3" />
@@ -221,7 +221,7 @@ export default function AccountantDashboard() {
           </div>
           <div className="space-y-2.5">
             <MetricRow loading={loading} label="Today"      vol={sTodayVol} amt={sTodayAmt} color="#10b981" />
-            <MetricRow loading={loading} label="This Month" vol={sMonthVol} amt={sMonthAmt} color="#10b981" />
+            <MetricRow loading={loading} label="All Time" vol={sMonthVol} amt={sMonthAmt} color="#10b981" />
           </div>
           <button onClick={() => navigate('/accountant/sales')} className="mt-3 w-full flex items-center justify-center gap-1 text-xs font-bold text-emerald-600 hover:text-emerald-700 transition-colors py-1">
             View Sales <ArrowRight className="w-3 h-3" />
@@ -251,7 +251,7 @@ export default function AccountantDashboard() {
             <div className="grid grid-cols-2 gap-2">
               {[
                 { label: 'Today', val: pTodayVol - sTodayVol },
-                { label: 'Month', val: pMonthVol - sMonthVol },
+                { label: 'All Time', val: pMonthVol - sMonthVol },
               ].map(({ label, val }) => (
                 <div key={label} className="py-2.5 px-3 rounded-xl bg-[var(--surface-alt)] border border-[var(--border)] text-center">
                   <p className="text-[9px] font-bold text-[var(--text-muted)] uppercase">{label}</p>
@@ -271,7 +271,7 @@ export default function AccountantDashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {[
           { label: "Today's P&L",   profit: todayProfit },
-          { label: "Monthly P&L",   profit: monthProfit },
+          { label: "All-Time P&L",   profit: monthProfit },
         ].map(({ label, profit }) => (
           <div key={label} className={cn(
             'flex items-center justify-between px-5 py-3.5 rounded-xl border text-sm font-semibold',

@@ -57,9 +57,8 @@ const getDashboardSummary = asyncHandler(async (req, res) => {
         },
       },
     ]),
-    // Month purchases — net (spoiled minus)
+    // All-time purchases — net (spoiled minus)
     PurchaseLedger.aggregate([
-      { $match: { date: { $gte: firstOfMonth } } },
       {
         $group: {
           _id: null,
@@ -68,9 +67,8 @@ const getDashboardSummary = asyncHandler(async (req, res) => {
         },
       },
     ]),
-    // Month sales — spoiled amount minus NAHI karo (same reason as above)
+    // All-time sales
     SaleLedger.aggregate([
-      { $match: { date: { $gte: firstOfMonth } } },
       {
         $group: {
           _id: null,

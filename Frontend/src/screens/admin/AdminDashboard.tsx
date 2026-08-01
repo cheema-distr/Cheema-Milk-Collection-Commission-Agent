@@ -278,11 +278,11 @@ export default function AdminDashboard() {
 
       {/* ── Month ── */}
       <section>
-        <SectionLabel icon={<Archive className="w-3.5 h-3.5"/>} text="Month-to-Date KPIs" sub="Cumulative figures since month start" />
+        <SectionLabel icon={<Archive className="w-3.5 h-3.5"/>} text="All-Time KPIs" sub="Total cumulative figures since beginning" />
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-          <KpiCard loading={loading} label="Monthly Purchase"  primary={`${fmt(mPurchL)} L`}  secondary={fmtRs(mPurchRs)} note="Accumulated milk receipts"   accent="#3b82f6" icon={<ShoppingCart className="w-4 h-4"/>} delay={0}/>
-          <KpiCard loading={loading} label="Monthly Sales"     primary={`${fmt(mSaleL)} L`}   secondary={fmtRs(mSaleRs)}  note="Total commercial revenues"   accent="#10b981" icon={<Activity className="w-4 h-4"/>}    delay={60}/>
-          <KpiCard loading={loading} label="Cumulative Stock"  primary={`${fmt(mStock)} L`}   note="Purchases − Sales MTD"  accent="#0ea5e9" icon={<Layers className="w-4 h-4"/>}          delay={120}/>
+          <KpiCard loading={loading} label="Total Purchase"  primary={`${fmt(mPurchL)} L`}  secondary={fmtRs(mPurchRs)} note="All-time milk receipts"   accent="#3b82f6" icon={<ShoppingCart className="w-4 h-4"/>} delay={0}/>
+          <KpiCard loading={loading} label="Total Sales"     primary={`${fmt(mSaleL)} L`}   secondary={fmtRs(mSaleRs)}  note="All-time commercial revenues"   accent="#10b981" icon={<Activity className="w-4 h-4"/>}    delay={60}/>
+          <KpiCard loading={loading} label="Cumulative Stock"  primary={`${fmt(mStock)} L`}   note="Total Purchases − Total Sales"  accent="#0ea5e9" icon={<Layers className="w-4 h-4"/>}          delay={120}/>
         </div>
       </section>
 
