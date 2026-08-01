@@ -16,8 +16,12 @@ const asyncHandler = require('../utils/asyncHandler');
  * Frontend: dashboard cards - today purchase, today sale, profit, stock
  */
 const getDashboardSummary = asyncHandler(async (req, res) => {
-  const today = new Date().toISOString().split('T')[0];
-  const firstOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+  // Pakistan Standard Time (PST) = UTC+5
+  // Use PKT offset so "today" matches what user sees in Pakistan
+  const pktOffset = 5 * 60; // minutes
+  const nowPKT = new Date(Date.now() + pktOffset * 60 * 1000);
+  const today = nowPKT.toISOString().split('T')[0];
+  const firstOfMonth = new Date(nowPKT.getFullYear(), nowPKT.getMonth(), 1)
     .toISOString().split('T')[0];
 
   const [

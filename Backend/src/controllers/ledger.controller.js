@@ -142,8 +142,10 @@ const deletePurchaseLedgerEntry = asyncHandler(async (req, res) => {
  * Net = gross minus spoiled (milkLiter - spoiledLiters, totalAmount - spoiledAmount)
  */
 const getPurchaseSummary = asyncHandler(async (req, res) => {
-  const today = new Date().toISOString().split('T')[0];
-  const firstOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+  const pktOffset = 5 * 60;
+  const nowPKT = new Date(Date.now() + pktOffset * 60 * 1000);
+  const today = nowPKT.toISOString().split('T')[0];
+  const firstOfMonth = new Date(nowPKT.getFullYear(), nowPKT.getMonth(), 1)
     .toISOString().split('T')[0];
 
   const [todayResult, monthResult, allTime] = await Promise.all([
@@ -361,8 +363,10 @@ const deleteSaleLedgerEntry = asyncHandler(async (req, res) => {
  * Net = gross minus spoiled
  */
 const getSaleSummary = asyncHandler(async (req, res) => {
-  const today = new Date().toISOString().split('T')[0];
-  const firstOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+  const pktOffset = 5 * 60;
+  const nowPKT = new Date(Date.now() + pktOffset * 60 * 1000);
+  const today = nowPKT.toISOString().split('T')[0];
+  const firstOfMonth = new Date(nowPKT.getFullYear(), nowPKT.getMonth(), 1)
     .toISOString().split('T')[0];
 
   const [todayResult, monthResult, allTime, allTimeKgs] = await Promise.all([
